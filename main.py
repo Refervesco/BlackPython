@@ -18,7 +18,7 @@ def get_card_value(current_card):
 def count_aces(user_hand):
     number_of_aces = 0
     for card in user_hand:
-        if card[0] == '1':
+        if card[0] == 'A':
             number_of_aces += 1
     return number_of_aces
 
