@@ -29,7 +29,7 @@ def calculate_hand_value(user_hand):
     for count in range(0, len(user_hand)):
         total_hand_value += get_card_value(user_hand[count])
 
-    print(f"Total hand value: {total_hand_value}")
+    #print(f"Total hand value: {total_hand_value}")
 
     if nb_of_aces > 0 and total_hand_value > 21:
         print(f"Found {nb_of_aces} aces, reducing hand value...")
@@ -62,7 +62,7 @@ def initialize_game(user):
 
     initial_hand_value += calculate_hand_value(u_hand)
     if user == "Player":
-        print(f"{user}'s hand value is: {initial_hand_value}")
+        #print(f"{user}'s hand value is: {initial_hand_value}")
         if (get_card_value(u_hand[0]) + get_card_value(u_hand[1])) == 21:
             print("Blackjack!!")
 
@@ -74,7 +74,9 @@ while should_play != "n":
     should_play = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
 
     if should_play == "n":
-        print("Thanks for playing BlackJack")
+        print(20 * "\n")
+        print("Thanks for playing 🧀 Refervesco's Blackjack! 🃏")
+        print(5 * "\n")
 
     elif should_play == "y":
         player = "Player"
@@ -91,17 +93,20 @@ while should_play != "n":
         card_count = 0
         current_hand_value = 0
         for card in player_hand:
-            p_card = get_card_value(player_hand[card_count])
-            current_hand_value += p_card
+            current_hand_value += get_card_value(player_hand[card_count])
             card_count += 1
 
+        print(f"Your hand value is: {current_hand_value}")
         playing = True
         additional_card = 0
+        hand_frozen = False # sets when the hand of the player is defined, to avoid going through the computer turn.
+
         while playing:
             continue_drawing = input("Do you want to draw another card? 'y' or 'n'")
             if continue_drawing == "n":
                 print("\n")
                 print(f"You decided to stop at {current_hand_value}, with the hand {' '.join(''.join(card) for card in player_hand)}")
+                hand_frozen = True
                 playing = False
 
             elif continue_drawing == "y":
@@ -116,22 +121,42 @@ while should_play != "n":
                 print("Wrong input")
 
             if current_hand_value > 21:
-                print(f"****** Your hand reached {current_hand_value}, which exceeds 21. You loose. ******")
+                print(f"****** Your hand reached {current_hand_value}, which exceeds 21. You LOOSE. ******")
                 playing = False
 
-        """# out of the while playing, resolving the computer hand...
+        # out of the while playing, resolving the computer hand...
         computer_card_count = 0
         current_computer_hand_value = 0
 
         # calculating computer's hand value
         for card in computer_hand:
-            c_card = get_card_value(computer_hand[card_count])
-            current_hand_value += c_card
+            current_computer_hand_value += get_card_value(computer_hand[computer_card_count])
             computer_card_count += 1
 
-        print(f"### Computer's hand value is {current_computer_hand_value}")
+        if hand_frozen:
+            print("############")
+            print(f"The computer reveals his hands: {' '.join(''.join(card) for card in computer_hand)}")
+            print(f"Computer's hand value is {calculate_hand_value(computer_hand)}")
 
-        while current_computer_hand_value < 17:"""
-        
+            while current_computer_hand_value < 17:
+                computer_hand.append(draw_card())
+                print(f"The computer draws a new card...")
+                print(f"The computer's hand is now: {' '.join(''.join(card) for card in computer_hand)}")
+                current_computer_hand_value = calculate_hand_value(computer_hand)
+                print(f"The new computer's hand value is: {current_computer_hand_value}")
+
+            if 17 <= current_computer_hand_value <= 21:
+                if current_computer_hand_value < current_hand_value:
+                    print(f"****** 🎉 You have a better hand than the computer (you have {current_hand_value}, he has {current_computer_hand_value}), you WIN 🎉. ******")
+
+                if current_computer_hand_value == current_hand_value:
+                    print(f"****** You and the computer have the same hand value ({current_hand_value} points). It's a SPLIT. ******")
+
+                if current_computer_hand_value > current_hand_value:
+                    print(f"****** You have a worse hand than the computer (you have {current_hand_value}, he has {current_computer_hand_value}). You LOOSE. ******")
+
+            elif current_computer_hand_value > 22:
+                print(f"****** 🎉 The computer's hand exceeded 22, you WIN 🎉. ******")
+
     else:
         print("Wrong input")
